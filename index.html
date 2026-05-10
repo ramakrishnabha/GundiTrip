@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gundi's Great British Adventure 🇬🇧</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --pink:   #f472b6;
+    --purple: #a855f7;
+    --teal:   #2dd4bf;
+    --yellow: #fbbf24;
+    --blue:   #60a5fa;
+    --green:  #4ade80;
+    --bg:     #0f0f1a;
+    --card:   #1a1a2e;
+    --border: rgba(255,255,255,0.08);
+    --text:   #e2e8f0;
+    --muted:  #94a3b8;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    position: relative;
+    text-align: center;
+    padding: 80px 24px 60px;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(168,85,247,0.25) 0%, transparent 70%),
+                radial-gradient(ellipse at 20% 80%, rgba(244,114,182,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 60%, rgba(45,212,191,0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(40px, 8vw, 80px);
+    background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 50%, var(--teal) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .hero-sub {
+    font-size: 18px;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto 32px;
+  }
+  .hero-dates {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .confetti { font-size: 28px; display: inline-block; animation: bounce 2s infinite; }
+  .confetti:nth-child(2) { animation-delay: 0.3s; }
+  .confetti:nth-child(3) { animation-delay: 0.6s; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+  /* ── Phases ── */
+  .phases { max-width: 900px; margin: 0 auto; padding: 0 20px 80px; }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 52px 0 20px;
+  }
+  .phase-icon {
+    width: 48px; height: 48px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .phase-title { font-size: 22px; font-weight: 700; }
+  .phase-sub   { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+  /* ── Day cards ── */
+  .day-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .day-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+  .day-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 20px 20px 0 0;
+  }
+
+  /* accent colours per phase */
+  .phase-settle .day-card::before  { background: linear-gradient(90deg, var(--teal), var(--blue)); }
+  .phase-oxford .day-card::before  { background: linear-gradient(90deg, var(--purple), var(--pink)); }
+  .phase-london .day-card::before  { background: linear-gradient(90deg, var(--yellow), var(--pink)); }
+  .phase-day-out .day-card::before { background: linear-gradient(90deg, var(--blue), var(--teal)); }
+  .phase-fun .day-card::before     { background: linear-gradient(90deg, var(--green), var(--teal)); }
+  .phase-farewell .day-card::before{ background: linear-gradient(90deg, var(--pink), var(--purple)); }
+
+  .day-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .day-date {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .day-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+  .day-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 100px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .activities { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .activity {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 12px;
+  }
+  .act-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .act-body {}
+  .act-name { font-size: 14px; font-weight: 600; }
+  .act-note { font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.5; }
+
+  .tip-box {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: rgba(251,191,36,0.08);
+    border: 1px solid rgba(251,191,36,0.2);
+    font-size: 13px;
+    color: #fde68a;
+    display: flex;
+    gap: 10px;
+  }
+  .tip-box span:first-child { flex-shrink: 0; }
+
+  /* ── Oxford multi-day ── */
+  .oxford-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .ox-tab {
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.04);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .ox-tab.active {
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    border-color: transparent;
+    color: #fff;
+  }
+  .ox-day { display: none; }
+  .ox-day.active { display: flex; flex-direction: column; gap: 10px; }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding: 40px 24px 60px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .footer-heart {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 12px;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.2)} }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    .day-card { padding: 18px 16px; }
+    .phases { padding: 0 12px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══════════════════════════════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-tag">✈️ A Special Trip Just For You</div>
+  <h1>Gundi's Great<br/>British Adventure</h1>
+  <p class="hero-sub">Eleven days of London magic, Oxford dreaming, Cotswolds wandering and memories for life 🌟</p>
+  <div class="hero-dates">
+    <span class="confetti">🏰</span>
+    <span>26 May – 7 June 2025</span>
+    <span class="confetti">🎡</span>
+    <span>London & Beyond</span>
+    <span class="confetti">🌸</span>
+  </div>
+</div>
+
+<div class="phases">
+
+  <!-- ══ PHASE 1: SETTLE IN ════════════════════════════════════════════ -->
+  <div class="phase-settle">
+    <div class="phase-header">
+      <div class="phase-icon" style="background:rgba(45,212,191,0.15)">🏡</div>
+      <div>
+        <div class="phase-title">Arrive & Settle In</div>
+        <div class="phase-sub">Monday 26 May</div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <div class="day-header">
+        <div>
+          <div class="day-date">Monday · 26 May</div>
+          <div class="day-title">Welcome to London! 🎉</div>
+        </div>
+        <div class="day-badge" style="background:rgba(45,212,191,0.15);color:var(--teal)">Chill Day</div>
+      </div>
+      <ul class="activities">
+        <li class="activity">
+          <span class="act-icon">✈️</span>
+          <div class="act-body">
+            <div class="act-name">Arrive & Freshen Up</div>
+            <div class="act-note">Jet lag is real — take it easy, unpack, get comfortable</div>
+          </div>
+        </li>
+        <li class="activity">
+          <span class="act-icon">🫙</span>
+          <div class="act-body">
+            <div class="act-name">Crispy Dosa Dinner</div>
+            <div class="act-note">Home comforts on the first night — nothing better than a crispy dosa after a long journey!</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══ PHASE 2: LOCAL EXPLORE ════════════════════════════════════════ -->
+  <div class="phase-settle">
+    <div class="phase-header">
+      <div class="phase-icon" style="background:rgba(96,165,250,0.15)">☀️</div>
+      <div>
+        <div class="phase-title">Local Exploring</div>
+        <div class="phase-sub">Tuesday 27 May</div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <div class="day-header">
+        <div>
+          <div class="day-date">Tuesday · 27 May</div>
+          <div class="day-title">Brunch, Shopping & Nature 🛍️</div>
+        </div>
+        <div class="day-badge" style="background:rgba(96,165,250,0.15);color:var(--blue)">Easy Day</div>
+      </div>
+      <ul class="activities">
+        <li class="activity">
+          <span class="act-icon">🍨</span>
+          <div class="act-body">
+            <div class="act-name">Creams Brunch</div>
+            <div class="act-note">The legendary dessert café — crepes, waffles, sundaes. Yes, for brunch. You're on holiday!</div>
+          </div>
+        </li>
+        <li class="activity">
+          <span class="act-icon">🛍️</span>
+          <div class="act-body">
+            <div class="act-name">Orpington High Street</div>
+            <div class="act-note">Browse the local shops, grab a coffee, get your bearings</div>
+          </div>
+        </li>
+        <li class="activity">
+          <span class="act-icon">🌿</span>
+          <div class="act-body">
+            <div class="act-name">High Elms Country Park</div>
+            <div class="act-note">Beautiful green parkland — perfect evening stroll, wildflower meadows, stunning views</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══ PHASE 3: OXFORD & COTSWOLDS ══════════════════════════════════ -->
+  <div class="phase-oxford">
+    <div class="phase-header">
+      <div class="phase-icon" style="background:rgba(168,85,247,0.15)">🏛️</div>
+      <div>
+        <div class="phase-title">Oxford & The Cotswolds</div>
+        <div class="phase-sub">Wed 28 May – Fri 30 May · The Royal Leonardo Hotel</div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <div class="day-header">
+        <div>
+          <div class="day-date">28 – 30 May · 3 Days</div>
+          <div class="day-title">The Dreaming Spires & Storybook Villages ✨</div>
+        </div>
+        <div class="day-badge" style="background:rgba(168,85,247,0.15);color:var(--purple)">Weekend Away</div>
+      </div>
+
+      <div class="oxford-tabs">
+        <div class="ox-tab active" onclick="switchOxTab(0)">Day 1 — Oxford Magic</div>
+        <div class="ox-tab" onclick="switchOxTab(1)">Day 2 — Cotswolds Villages</div>
+        <div class="ox-tab" onclick="switchOxTab(2)">Day 3 — Palaces & Punts</div>
+      </div>
+
+      <!-- Day 1 -->
+      <div class="ox-day active" id="ox0">
+        <div class="activity">
+          <span class="act-icon">🧙‍♂️</span>
+          <div class="act-body">
+            <div class="act-name">Christ Church College — The Real Hogwarts</div>
+            <div class="act-note">The dining hall inspired the Great Hall in Harry Potter. The grand staircase appeared in the films. Absolute must!</div>
+          </div>
+        </div>
+        <div class="activity">
+          <span class="act-icon">📚</span>
+          <div class="act-body">
+            <div class="act-name">Bodleian Library & Radcliffe Camera</div>
+            <div class="act-note">One of the oldest libraries in the world — Hogwarts library scenes were filmed here. The round Radcliffe Camera is jaw-dropping</div>
+          </div>
+        </div>
+        <div class="activity">
+          <span class="act-icon">🗼</span>
+          <div class="act-body">
+            <div class="act-name">Carfax Tower — Climb for the View</div>
+            <div class="act-note">Climb 99 steps for a panoramic view over all of Oxford's dreaming spires. Only £3!</div>
+          </div>
+        </div>
+        <div class="activity">
+          <span class="act-icon">🏪</span>
+          <div class="act-body">
+            <div class="act-name">Oxford Covered Market</div>
+            <div class="act-note">A hidden gem since 1774 — amazing food stalls, independent boutiques, and the best hot chocolate in Oxford</div>
+          </div>
+        </div>
+        <div class="activity">
+          <span class="act-icon">📖</span>
+          <div class="act-body">
+            <div class="act-name">Blackwell's Bookshop</div>
+            <div class="act-note">The most famous bookshop in Oxford — the underground Norrington Room holds 3 miles of shelves. Mind-blowing!</div>
+          </div>
+        </div>
+        <div class="activity">
+          <span class="act-icon">🍺</span>
+          <div class="act-body">
+            <div class="act-name">The Eagle & Child Pub</div>
+            <div class="act-note">Where J.R.R. Tolkien and C.S. Lewis used to meet and share their writing. Order a Coke and soak it all in!</div>
+          </div>
+        </div>
+        <div class="tip-box"><span>💡</span><span>Wear comfy shoes — Oxford is best explored on foot. Most colleges charge a small entry fee but are totally worth it.</span></div>
+      </div>
+
+      <!-- Day 2 -->
+      <div class="ox-day" id="ox1">
+        <div class="activity">
+          <span class="act-icon">🦆</span>
+          <div class="act-body">
+            <div class="act-name">Bourton-on-the-Water</div>
+            <div class="act-note">"The Venice of the Cotswolds" — low stone bridges over a clear river, ducks everywhere. Grab an ice cream and paddle your feet!</div>
+          </div>
+        </div>
+        <div class="activity">
+          <span class="act-icon">🏘️</span>
+          <div class="act-body">
+            <div class="act-name">Bibury — Arlington Row</div>
+            <div class="act-note">The most photographed row of cottages in England. Honey-coloured stone, flower boxes, absolute fairytale vibes. This is on the UK passport!</div>
+          </div>
+        </div>
+        <div class="activity">
+          <span class="act-icon">🌸</span>
+          <div class="act-body">
+            <div class="act-name">Burford — The Gateway to the Cotswolds</div>
+            <div class="act-note">A gorgeous sloping high street lined with antique shops, tea rooms and boutiques. Perfect for a wander and afternoon tea</div>
+          </div>
+        </div>
+        <div class="activity">
+          <span class="act-icon">🔭</span>
+          <div class="act-body">
+            <div class="act-name">Broadway Tower</div>
+            <div class="act-note">A folly on the second highest point in the Cotswolds — on a clear day you can see 13 counties! Stunning sunset spot</div>
+          </div>
+        </div>
+        <div class="activity">
+          <span class="act-icon">🫖</span>
+          <div class="act-body">
+            <div class="act-name">Afternoon Tea in a Cotswolds Tearoom</div>
+            <div class="act-note">Find a cosy tearoom in any village — scones with clotted cream and jam is non-negotiable Cotswolds tradition</div>
+          </div>
+        </div>
+        <div class="tip-box"><span>🚗</span><span>The Cotswolds is best by car — villages are spread out but each one is more magical than the last. Give yourself time to wander and get happily lost.</span></div>
+      </div>
+
+      <!-- Day 3 -->
+      <div class="ox-day" id="ox2">
+        <div class="activity">
+          <span class="act-icon">👑</span>
+          <div class="act-body">
+            <div class="act-name">Blenheim Palace</div>
+            <div class="act-note">A UNESCO World Heritage Site just 8 miles from Oxford — birthplace of Winston Churchill. The grounds alone are worth the visit: lakes, gardens, butterfly house. Absolutely stunning!</div>
+          </div>
+        </div>
+        <div class="activity">
+          <span class="act-icon">🛶</span>
+          <div class="act-body">
+            <div class="act-name">Punting on the Cherwell</div>
+            <div class="act-note">The most Oxford thing you can do! Hire a punt and glide down the river past the colleges. Go with a guided boat or DIY — falling in is a rite of passage 😄</div>
+          </div>
+        </div>
+        <div class="activity">
+          <span class="act-icon">🎨</span>
+          <div class="act-body">
+            <div class="act-name">Ashmolean Museum</div>
+            <div class="act-note">Britain's oldest public museum — free entry! Amazing art and antiquities from ancient Egypt to the Renaissance</div>
+          </div>
+        </div>
+        <div class="activity">
+          <span class="act-icon">🌺</span>
+          <div class="act-body">
+            <div class="act-name">Oxford Botanic Garden</div>
+            <div class="act-note">The oldest botanic garden in the UK — beautiful walled gardens along the river. Philip Pullman fans: this is where Lyra and Will meet in His Dark Materials!</div>
+          </div>
+        </div>
+        <div class="tip-box"><span>🌅</span><span>For sunset, head to South Park — free hilltop park with the most spectacular view of Oxford's skyline you'll ever see.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PHASE 4: LONDON ICONS ═════════════════════════════════════════ -->
+  <div class="phase-london">
+    <div class="phase-header">
+      <div class="phase-icon" style="background:rgba(251,191,36,0.15)">🏙️</div>
+      <div>
+        <div class="phase-title">London Iconic</div>
+        <div class="phase-sub">Saturday 31 May</div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <div class="day-header">
+        <div>
+          <div class="day-date">Saturday · 31 May</div>
+          <div class="day-title">The Classic London Trail 🎡</div>
+        </div>
+        <div class="day-badge" style="background:rgba(251,191,36,0.15);color:var(--yellow)">Big Day!</div>
+      </div>
+      <ul class="activities">
+        <li class="activity"><span class="act-icon">🏰</span><div class="act-body"><div class="act-name">Tower Bridge</div><div class="act-note">Walk across the glass floor walkway for incredible views — don't look down! 😅</div></div></li>
+        <li class="activity"><span class="act-icon">🦁</span><div class="act-body"><div class="act-name">Leadenhall Market</div><div class="act-note">A stunning Victorian covered market — also used as Diagon Alley in Harry Potter!</div></div></li>
+        <li class="activity"><span class="act-icon">⛪</span><div class="act-body"><div class="act-name">St Paul's Cathedral</div><div class="act-note">Climb to the Whispering Gallery — whisper to the wall and it carries your voice all the way around!</div></div></li>
+        <li class="activity"><span class="act-icon">🕰️</span><div class="act-body"><div class="act-name">Big Ben & Westminster</div><div class="act-note">The classic London shot — grab it at golden hour if you can!</div></div></li>
+        <li class="activity"><span class="act-icon">🎡</span><div class="act-body"><div class="act-name">London Eye</div><div class="act-note">Book in advance to skip the queue — the views at sunset are unreal</div></div></li>
+        <li class="activity"><span class="act-icon">🌉</span><div class="act-body"><div class="act-name">Millennium Bridge → Tate Modern</div><div class="act-note">Walk the wobbly bridge (Harry Potter again!), then explore the free Tate Modern gallery on the South Bank</div></div></li>
+        <li class="activity"><span class="act-icon">🛍️</span><div class="act-body"><div class="act-name">Oxford Circus</div><div class="act-note">Carnaby Street, Regent Street, Topshop territory — the shopping heart of London</div></div></li>
+      </ul>
+      <div class="tip-box"><span>🚇</span><span>Get an Oyster card or use contactless — it's the cheapest way to get around London. The Elizabeth line is new, fast and beautiful.</span></div>
+    </div>
+  </div>
+
+  <!-- ══ PHASE 5: MUSEUMS & CULTURE ═══════════════════════════════════ -->
+  <div class="phase-day-out">
+    <div class="phase-header">
+      <div class="phase-icon" style="background:rgba(96,165,250,0.15)">🦕</div>
+      <div>
+        <div class="phase-title">Culture & Museums</div>
+        <div class="phase-sub">Sunday 1 June</div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <div class="day-header">
+        <div>
+          <div class="day-date">Sunday · 1 June</div>
+          <div class="day-title">Dinosaurs, History & Pigeons 🦕</div>
+        </div>
+        <div class="day-badge" style="background:rgba(96,165,250,0.15);color:var(--blue)">Free Museums!</div>
+      </div>
+      <ul class="activities">
+        <li class="activity"><span class="act-icon">🦕</span><div class="act-body"><div class="act-name">Natural History Museum</div><div class="act-note">Free entry! The blue whale skeleton, the dinosaur hall, the giant sequoia — genuinely mind-blowing. Book a free timed entry online first</div></div></li>
+        <li class="activity"><span class="act-icon">⚔️</span><div class="act-body"><div class="act-name">Imperial War Museum</div><div class="act-note">Incredibly moving exhibitions on WWI, WWII, and modern conflicts. The Holocaust gallery is sobering and important</div></div></li>
+        <li class="activity"><span class="act-icon">🐦</span><div class="act-body"><div class="act-name">Trafalgar Square</div><div class="act-note">Feed the pigeons (if you dare!), see the Fourth Plinth art installation, and soak up the energy of one of the world's great public squares</div></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══ PHASE 6: ROYAL LONDON ═════════════════════════════════════════ -->
+  <div class="phase-day-out">
+    <div class="phase-header">
+      <div class="phase-icon" style="background:rgba(96,165,250,0.15)">👑</div>
+      <div>
+        <div class="phase-title">Royal London</div>
+        <div class="phase-sub">Monday 2 June</div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <div class="day-header">
+        <div>
+          <div class="day-date">Monday · 2 June</div>
+          <div class="day-title">Windsor & Buckingham Palace 👑</div>
+        </div>
+        <div class="day-badge" style="background:rgba(251,191,36,0.15);color:var(--yellow)">Royal Day</div>
+      </div>
+      <ul class="activities">
+        <li class="activity"><span class="act-icon">🚂</span><div class="act-body"><div class="act-name">Train from London Victoria</div><div class="act-note">~40 min train ride — a lovely journey through the English countryside</div></div></li>
+        <li class="activity"><span class="act-icon">🏰</span><div class="act-body"><div class="act-name">Windsor Castle</div><div class="act-note">The oldest and largest occupied castle in the world — home to the Royal Family. St George's Chapel is breathtaking. Try to catch the Changing of the Guard!</div></div></li>
+        <li class="activity"><span class="act-icon">🌳</span><div class="act-body"><div class="act-name">Windsor Great Park</div><div class="act-note">3,800 acres of parkland right next to the castle — beautiful Long Walk leading up to the castle is iconic</div></div></li>
+        <li class="activity"><span class="act-icon">🎺</span><div class="act-body"><div class="act-name">Buckingham Palace</div><div class="act-note">Back in London — check the schedule for the Changing of the Guard ceremony at the Palace</div></div></li>
+      </ul>
+      <div class="tip-box"><span>⏰</span><span>Book Windsor Castle tickets in advance online — queues can be very long, especially in summer.</span></div>
+    </div>
+  </div>
+
+  <!-- ══ PHASE 7: FUN DAYS ══════════════════════════════════════════════ -->
+  <div class="phase-fun">
+    <div class="phase-header">
+      <div class="phase-icon" style="background:rgba(74,222,128,0.15)">🎉</div>
+      <div>
+        <div class="phase-title">Fun & Frolics</div>
+        <div class="phase-sub">Tue 3 June – Fri 6 June</div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <div class="day-header">
+        <div>
+          <div class="day-date">Tuesday · 3 June</div>
+          <div class="day-title">Celebrities, Parks & Coffee ☕</div>
+        </div>
+        <div class="day-badge" style="background:rgba(74,222,128,0.15);color:var(--green)">Chilled</div>
+      </div>
+      <ul class="activities">
+        <li class="activity"><span class="act-icon">🎭</span><div class="act-body"><div class="act-name">Madame Tussauds</div><div class="act-note">Get your selfies with the celebs — book in advance for cheaper tickets and shorter queues!</div></div></li>
+        <li class="activity"><span class="act-icon">🌿</span><div class="act-body"><div class="act-name">High Elms Park</div><div class="act-note">A lovely wander through nature to wind down the day</div></div></li>
+        <li class="activity"><span class="act-icon">☕</span><div class="act-body"><div class="act-name">Coffee & Catch-up</div><div class="act-note">Find a cute café and chill — you'll have lots to talk about by now!</div></div></li>
+      </ul>
+    </div>
+
+    <div class="day-card">
+      <div class="day-header">
+        <div>
+          <div class="day-date">Wednesday · 4 June</div>
+          <div class="day-title">The Chelsfield 🍽️</div>
+        </div>
+        <div class="day-badge" style="background:rgba(74,222,128,0.15);color:var(--green)">Local Gem</div>
+      </div>
+      <ul class="activities">
+        <li class="activity"><span class="act-icon">🍽️</span><div class="act-body"><div class="act-name">The Chelsfield</div><div class="act-note">A lovely local day out — great food, beautiful surroundings, proper English charm</div></div></li>
+      </ul>
+    </div>
+
+    <div class="day-card">
+      <div class="day-header">
+        <div>
+          <div class="day-date">Thursday · 5 June</div>
+          <div class="day-title">The O2, Greenwich & River Cruise 🚢</div>
+        </div>
+        <div class="day-badge" style="background:rgba(74,222,128,0.15);color:var(--green)">Adventure!</div>
+      </div>
+      <ul class="activities">
+        <li class="activity"><span class="act-icon">🎪</span><div class="act-body"><div class="act-name">The O2 Arena</div><div class="act-note">If you're feeling brave — climb OVER the roof of The O2 for insane views of London! (Up at The O2 experience)</div></div></li>
+        <li class="activity"><span class="act-icon">⚓</span><div class="act-body"><div class="act-name">Greenwich</div><div class="act-note">Stand on the Prime Meridian (literally zero degrees longitude!), visit the Cutty Sark ship, and explore the Royal Naval College — used in films!</div></div></li>
+        <li class="activity"><span class="act-icon">🚢</span><div class="act-body"><div class="act-name">Thames River Cruise</div><div class="act-note">Sail back into central London past all the landmarks — the best way to see the city. Grab a spot on deck!</div></div></li>
+      </ul>
+    </div>
+
+    <div class="day-card">
+      <div class="day-header">
+        <div>
+          <div class="day-date">Friday · 6 June</div>
+          <div class="day-title">Thorpe Park 🎢</div>
+        </div>
+        <div class="day-badge" style="background:rgba(244,114,182,0.15);color:var(--pink)">Thrill Day!</div>
+      </div>
+      <ul class="activities">
+        <li class="activity"><span class="act-icon">🎢</span><div class="act-body"><div class="act-name">Thorpe Park — Full Day</div><div class="act-note">Stealth, Colossus, Saw, Nemesis Inferno — some of the UK's biggest and fastest rollercoasters. This is going to be EPIC. Book online for the best price!</div></div></li>
+      </ul>
+      <div class="tip-box"><span>🎟️</span><span>Buy tickets online in advance — they're significantly cheaper than on the door. Arrive when it opens to beat the queues!</span></div>
+    </div>
+  </div>
+
+  <!-- ══ PHASE 8: FAREWELL ══════════════════════════════════════════════ -->
+  <div class="phase-farewell">
+    <div class="phase-header">
+      <div class="phase-icon" style="background:rgba(244,114,182,0.15)">💛</div>
+      <div>
+        <div class="phase-title">The Last Day</div>
+        <div class="phase-sub">Saturday 7 June</div>
+      </div>
+    </div>
+
+    <div class="day-card">
+      <div class="day-header">
+        <div>
+          <div class="day-date">Saturday · 7 June</div>
+          <div class="day-title">Easy Day, Big Feelings & Little Big Treats 🍰</div>
+        </div>
+        <div class="day-badge" style="background:rgba(244,114,182,0.15);color:var(--pink)">Farewell 💛</div>
+      </div>
+      <ul class="activities">
+        <li class="activity"><span class="act-icon">😌</span><div class="act-body"><div class="act-name">Easy Morning</div><div class="act-note">Sleep in, no alarm, take it slow — you've earned it after 12 incredible days!</div></div></li>
+        <li class="activity"><span class="act-icon">🍰</span><div class="act-body"><div class="act-name">Little Big Treats</div><div class="act-note">The sweetest send-off — treats, memories, laughter, and maybe a few happy tears</div></div></li>
+        <li class="activity"><span class="act-icon">💛</span><div class="act-body"><div class="act-name">Pack Up & Head Home</div><div class="act-note">You'll leave with a suitcase full of memories (and probably some Cadbury chocolate!) 🍫</div></div></li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ FOOTER ══════════════════════════════════════════════════════════ -->
+<div class="footer">
+  <span class="footer-heart">💛</span>
+  Made with love for Gundi's Great British Adventure<br/>
+  Have the most amazing time — you deserve every single moment of it! 🇬🇧✨
+</div>
+
+<script>
+  function switchOxTab(index) {
+    document.querySelectorAll('.ox-tab').forEach((t, i) => t.classList.toggle('active', i === index));
+    document.querySelectorAll('.ox-day').forEach((d, i) => d.classList.toggle('active', i === index));
+  }
+</script>
+</body>
+</html>
