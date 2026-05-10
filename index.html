@@ -679,10 +679,101 @@
 </div>
 
 <script>
+  /* ── Oxford tabs ── */
   function switchOxTab(index) {
     document.querySelectorAll('.ox-tab').forEach((t, i) => t.classList.toggle('active', i === index));
     document.querySelectorAll('.ox-day').forEach((d, i) => d.classList.toggle('active', i === index));
   }
+
+  /* ── Edit mode ── */
+  const EDITABLE = '.act-name, .act-note, .day-title, .day-date, .day-badge, .hero h1, .hero-sub, .phase-title, .phase-sub, .tip-box, .footer, .hero-dates, .cp-title';
+  const STORAGE_KEY = 'gunditrip_edits';
+  let editMode = false;
+
+  function loadSavedEdits() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      document.querySelectorAll('[data-eid]').forEach(el => {
+        if (saved[el.dataset.eid] !== undefined) el.innerHTML = saved[el.dataset.eid];
+      });
+    } catch(e) {}
+  }
+
+  function saveEdit(eid, html) {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      saved[eid] = html;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+    } catch(e) {}
+  }
+
+  function assignIds() {
+    let i = 0;
+    document.querySelectorAll(EDITABLE).forEach(el => {
+      if (!el.dataset.eid) el.dataset.eid = 'e' + (i++);
+    });
+  }
+
+  function toggleEdit() {
+    editMode = !editMode;
+    const btn    = document.getElementById('edit-btn');
+    const banner = document.getElementById('edit-banner');
+
+    document.querySelectorAll('[data-eid]').forEach(el => {
+      el.contentEditable = editMode ? 'true' : 'false';
+      el.style.outline   = editMode ? '2px dashed rgba(168,85,247,0.5)' : '';
+      el.style.borderRadius = editMode ? '4px' : '';
+      el.style.minHeight    = editMode ? '1em' : '';
+    });
+
+    btn.textContent    = editMode ? '✅ Done editing' : '✏️ Edit trip';
+    btn.style.background = editMode ? 'linear-gradient(135deg,#4ade80,#2dd4bf)' : 'linear-gradient(135deg,#a855f7,#f472b6)';
+    banner.style.display = editMode ? 'flex' : 'none';
+  }
+
+  function resetEdits() {
+    if (!confirm('Reset all edits back to the original? This cannot be undone.')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    assignIds();
+    loadSavedEdits();
+
+    /* attach live save on input */
+    document.querySelectorAll('[data-eid]').forEach(el => {
+      el.addEventListener('input', () => saveEdit(el.dataset.eid, el.innerHTML));
+    });
+  });
 </script>
+
+<!-- ── Edit button ── -->
+<button id="edit-btn" onclick="toggleEdit()" style="
+  position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+  background: linear-gradient(135deg,#a855f7,#f472b6);
+  color: #fff; border: none; border-radius: 100px;
+  padding: 12px 22px; font-family: 'Poppins',sans-serif;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  box-shadow: 0 4px 20px rgba(168,85,247,0.4);
+  transition: all 0.2s;
+">✏️ Edit trip</button>
+
+<!-- ── Edit banner ── -->
+<div id="edit-banner" style="
+  display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 9998;
+  background: linear-gradient(135deg,#a855f7,#f472b6);
+  color: #fff; padding: 10px 20px;
+  font-family: 'Poppins',sans-serif; font-size: 13px; font-weight: 500;
+  align-items: center; justify-content: space-between; gap: 12px;
+">
+  <span>✏️ <strong>Edit mode on</strong> — click any text to change it. Changes save automatically.</span>
+  <button onclick="resetEdits()" style="
+    background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4);
+    color: #fff; border-radius: 100px; padding: 4px 14px;
+    font-family: 'Poppins',sans-serif; font-size: 12px; cursor: pointer;
+  ">🔄 Reset to original</button>
+</div>
+
 </body>
 </html>
