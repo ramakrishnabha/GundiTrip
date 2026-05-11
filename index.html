@@ -137,7 +137,14 @@
   /* ── Weather note ── */
   .wx-disclaimer { text-align: center; font-size: 11px; color: rgba(148,163,184,0.5); padding: 0 20px 20px; }
 
-  @media (max-width: 600px) { .day-card { padding: 18px 16px; } .phases { padding: 0 12px 60px; } }
+  /* ── Trip photos ── */
+  .trip-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .trip-photo { position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 16/9; }
+  .trip-photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s; }
+  .trip-photo:hover img { transform: scale(1.04); }
+  .trip-photo-caption { position: absolute; bottom: 0; left: 0; right: 0; padding: 8px 10px 7px; background: linear-gradient(transparent, rgba(0,0,0,0.72)); font-size: 11px; color: rgba(255,255,255,0.85); font-weight: 500; }
+
+  @media (max-width: 600px) { .day-card { padding: 18px 16px; } .phases { padding: 0 12px 60px; } .trip-photos { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -183,6 +190,16 @@
         </div>
       </div>
       <div class="weather-strip"><span class="wx-icon">⛅</span><span class="wx-temp">11–18°C</span><span class="wx-desc">Overcast, dry — perfect arrival weather</span><span class="wx-note">Last yr</span></div>
+      <div class="trip-photos">
+        <div class="trip-photo">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/British_Airways_Boeing_777-200ER_G-VIIJ.jpg/1280px-British_Airways_Boeing_777-200ER_G-VIIJ.jpg" alt="British Airways flight" loading="lazy" />
+          <div class="trip-photo-caption">✈️ Your British Airways flight</div>
+        </div>
+        <div class="trip-photo">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Aerial_view_of_central_London%2C_English_Heritage.jpg/1280px-Aerial_view_of_central_London%2C_English_Heritage.jpg" alt="Aerial view of London — Thames, Westminster & the London Eye" loading="lazy" />
+          <div class="trip-photo-caption">🏙️ London from the sky — Thames, Westminster & the Eye</div>
+        </div>
+      </div>
       <ul class="activities">
         <li class="activity"><span class="act-icon">✈️</span><div class="act-body"><div class="act-name">Arrive & Freshen Up</div><div class="act-note">Jet lag is real — take it easy, unpack, get comfortable</div></div></li>
         <li class="activity"><span class="act-icon">🫙</span><div class="act-body"><div class="act-name">Crispy Dosa Dinner</div><div class="act-note">Home comforts on the first night — nothing better than a crispy dosa after a long journey!</div></div></li>
